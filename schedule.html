@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Week Foundry Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #1c1a17; --ink-800: #26231f;
+    --paper: #f6f3ec; --card: #fbf9f4;
+    --steel: #4a5568; --rust: #c05621;
+    --text-primary: #211f1b; --text-secondary: #5c574d; --text-muted: #948e80;
+    --border: rgba(33,31,27,0.14); --border-strong: rgba(33,31,27,0.28);
+    --weekend-bg: #e7e3d8;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px 20px 80px; background: var(--paper); color: var(--text-primary);
+    font-family: var(--font-body);
+  }
+  .wrap { max-width: 100%; overflow-x: auto; }
+  .inner { min-width: 1100px; max-width: 1500px; margin: 0 auto; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--rust); margin: 0 0 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before { content: ''; width: 16px; height: 2px; background: var(--rust); display: inline-block; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: 0; color: var(--ink-900); }
+  a.backlink {
+    font-family: var(--font-mono); font-size: 12px; color: var(--steel); text-decoration: none;
+    border: 1px solid var(--border-strong); border-radius: 6px; padding: 6px 10px;
+  }
+  button {
+    font-family: var(--font-body); font-weight: 500; font-size: 13px;
+    background: var(--card); border: 1px solid var(--border-strong); border-radius: 6px;
+    padding: 8px 13px; cursor: pointer; color: var(--text-primary);
+  }
+  button:hover { background: #fff; border-color: var(--ink-900); }
+  button.primary { background: var(--ink-900); color: var(--paper); border-color: var(--ink-900); }
+  button.primary:hover { background: var(--rust); border-color: var(--rust); }
+  table { border-collapse: collapse; width: 100%; margin-top: 16px; table-layout: fixed; }
+  th, td { border: 1px solid var(--border); text-align: center; padding: 0; }
+  th.rowlabel-head, td.rowlabel {
+    text-align: left; padding: 6px 10px; font-family: var(--font-mono); font-size: 12px;
+    font-weight: 600; background: var(--card); position: sticky; left: 0; z-index: 2; width: 150px;
+  }
+  th.process-head, td.process {
+    text-align: left; padding: 6px 8px; font-size: 11px; color: var(--text-muted);
+    background: var(--card); position: sticky; left: 150px; z-index: 2; width: 90px;
+  }
+  th.day-head {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-secondary);
+    background: var(--card); padding: 6px 2px; height: 70px; width: 44px;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+  }
+  th.day-head.weekend, td.cell.weekend { background: var(--weekend-bg); }
+  td.cell { width: 44px; height: 32px; cursor: pointer; font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+  td.cell input {
+    width: 100%; height: 100%; border: none; text-align: center; font-family: var(--font-mono);
+    font-size: 11px; font-weight: 600; background: transparent; color: inherit; padding: 0;
+  }
+  td.cell input:focus { outline: 2px solid var(--rust); outline-offset: -2px; }
+  #lastSaved { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin: 0; }
+  #pinGate {
+    max-width: 340px; margin: 100px auto; text-align: center;
+    background: var(--card); border: 1px solid var(--border-strong); border-radius: 10px; padding: 32px 28px;
+  }
+  #pinGate p { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+  input#pinInput { font-family: var(--font-body); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; width: 100%; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div id="pinGate" style="display:none;">
+  <p>This board is protected</p>
+  <input type="password" id="pinInput" placeholder="Enter shared PIN" />
+  <button class="primary" id="pinSubmit" style="width:100%;">Unlock</button>
+  <p id="pinError" style="color:#a32d2d;font-size:13px;display:none;">Wrong PIN, try again.</p>
+</div>
+
+<div class="wrap" id="appRoot" style="display:none;">
+<div class="inner">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;">
+    <div>
+      <p class="eyebrow">Urban Accessories &middot; Production</p>
+      <h1>3-Week Foundry Schedule</h1>
+    </div>
+    <a class="backlink" href="/index.html">&larr; Foundry Priority Board</a>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px;flex-wrap:wrap;">
+    <p id="lastSaved"></p>
+    <div style="display:flex;gap:8px;">
+      <button id="syncBtn">Check Fulcrum &amp; update &#8599;</button>
+      <button id="addEmployeeBtn">+ Add row</button>
+      <button id="shiftWeekBtn">Shift 1 week forward &rarr;</button>
+    </div>
+  </div>
+
+  <p style="font-size:12px;color:var(--text-muted);margin:14px 0 0;">
+    Click any cell to edit. Type a job number, "off", "Sick", "PC", or leave the default 10 (a normal 10-hour day).
+    Same job number always gets the same color across the grid.
+  </p>
+
+  <div id="liveTimersPanel" style="margin-top:16px;background:var(--card);border:1px solid var(--border-strong);border-radius:8px;padding:14px;display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <p style="font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin:0;">Live from Fulcrum</p>
+      <div style="display:flex;gap:8px;">
+        <button id="applyToGridBtn" class="primary" style="display:none;">Apply to today's grid</button>
+        <button id="refreshLiveBtn" style="font-size:12px;padding:4px 10px;">Refresh</button>
+      </div>
+    </div>
+    <div id="liveTimersContent" style="font-size:12px;font-family:var(--font-mono);"></div>
+    <p id="applyResult" style="font-size:12px;margin:8px 0 0;"></p>
+  </div>
+
+  <div id="tableHost"></div>
+</div>
+</div>
+
+<script>
+let state = { employees: [], startDate: null, numDays: 21, cells: {} };
+let pin = sessionStorage.getItem('board-pin') || '';
+let saveTimer = null;
+
+const COLOR_PALETTE = [
+  '#cfe3f7','#d7ead2','#f7d9c4','#e6d5f2','#fbe3ee','#fff2b8','#d3e0e0','#e8d6c3','#c9e8dd','#f0d0d0',
+  '#c7d9f0','#e0d9c0','#d0e8e0','#f0e0d0','#dcd0e8','#e8d0dc','#d0e0d8','#f0d8c0','#d8e0f0','#e8e0d0',
+  '#c8e0d0','#f0d0e8','#d0d8f0','#e0f0d0'
+];
+function colorKey(v) {
+  // use only the leading job/customer token so "301863 Economy" and "301863" (or slight
+  // retyping differences after the number) still land on the same color consistently
+  return v.trim().split(/\s+/)[0].toLowerCase();
+}
+
+let colorRegistry = {};
+
+function rebuildColorRegistry() {
+  colorRegistry = {};
+  let nextIdx = 0;
+  const keys = Object.keys(state.cells).sort((a, b) => {
+    const [aE, aD] = a.split('-').map(Number);
+    const [bE, bD] = b.split('-').map(Number);
+    return (aE - bE) || (aD - bD);
+  });
+  keys.forEach(k => {
+    const v = state.cells[k];
+    if (!v) return;
+    const key = colorKey(v);
+    if (['off', 'sick', 'pc', '10', ''].includes(key)) return;
+    if (!(key in colorRegistry)) {
+      colorRegistry[key] = COLOR_PALETTE[nextIdx % COLOR_PALETTE.length];
+      nextIdx++;
+    }
+  });
+}
+
+function colorForValue(v) {
+  if (!v) return null;
+  const key = colorKey(v);
+  if (key === 'off') return '#e2ded2';
+  if (key === 'sick') return '#f2c94c';
+  if (key === 'pc') return '#f5c6c6';
+  if (key === '10' || key === '') return null;
+  return colorRegistry[key] || null;
+}
+
+function apiHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (pin) h['x-board-pin'] = pin;
+  return h;
+}
+async function checkPinRequired() {
+  const res = await fetch('/api/pin-required');
+  return (await res.json()).required;
+}
+async function fetchRoster() {
+  const res = await fetch('/api/roster', { headers: apiHeaders() });
+  if (res.status === 401) return null;
+  return res.json();
+}
+async function pushRoster() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const res = await fetch('/api/roster', { method: 'POST', headers: apiHeaders(), body: JSON.stringify(state) });
+    if (res.ok) {
+      const now = new Date();
+      document.getElementById('lastSaved').textContent = 'Saved ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    } else {
+      document.getElementById('lastSaved').textContent = 'Save failed - check connection';
+    }
+  }, 400);
+}
+
+function dateForIndex(i) {
+  const start = new Date(state.startDate + 'T00:00:00');
+  const d = new Date(start.getTime() + i * 86400000);
+  return d;
+}
+
+function renderTable() {
+  rebuildColorRegistry();
+  const host = document.getElementById('tableHost');
+  host.innerHTML = '';
+  const table = document.createElement('table');
+
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  const th1 = document.createElement('th'); th1.className = 'rowlabel-head'; th1.textContent = 'Employees';
+  const th2 = document.createElement('th'); th2.className = 'process-head'; th2.textContent = 'Process';
+  headRow.appendChild(th1); headRow.appendChild(th2);
+  for (let i = 0; i < state.numDays; i++) {
+    const d = dateForIndex(i);
+    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+    const th = document.createElement('th');
+    th.className = 'day-head' + (isWeekend ? ' weekend' : '');
+    th.textContent = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+    headRow.appendChild(th);
+  }
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  state.employees.forEach((emp, empIdx) => {
+    const tr = document.createElement('tr');
+    const nameTd = document.createElement('td');
+    nameTd.className = 'rowlabel';
+
+    const nameLine = document.createElement('div');
+    nameLine.textContent = emp.name;
+    nameLine.contentEditable = 'true';
+    nameLine.addEventListener('blur', () => { emp.name = nameLine.textContent.trim(); pushRoster(); });
+    nameTd.appendChild(nameLine);
+
+    const aliasLine = document.createElement('div');
+    aliasLine.style.cssText = 'font-size:10px;font-weight:400;color:var(--text-muted);font-style:italic;margin-top:2px;';
+    aliasLine.textContent = (emp.aliases && emp.aliases.length) ? 'aka: ' + emp.aliases.join(', ') : 'aka: (click to set Fulcrum name)';
+    aliasLine.contentEditable = 'true';
+    aliasLine.title = 'The name this person goes by in Fulcrum, if different (used to auto-match live timers)';
+    aliasLine.addEventListener('focus', () => {
+      if (!emp.aliases || !emp.aliases.length) aliasLine.textContent = '';
+    });
+    aliasLine.addEventListener('blur', () => {
+      const raw = aliasLine.textContent.replace(/^aka:\s*/i, '').trim();
+      emp.aliases = raw ? raw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      aliasLine.textContent = emp.aliases.length ? 'aka: ' + emp.aliases.join(', ') : 'aka: (click to set Fulcrum name)';
+      pushRoster();
+    });
+    nameTd.appendChild(aliasLine);
+    tr.appendChild(nameTd);
+
+    const procTd = document.createElement('td');
+    procTd.className = 'process';
+    procTd.textContent = emp.process || '';
+    procTd.contentEditable = 'true';
+    procTd.addEventListener('blur', () => { emp.process = procTd.textContent.trim(); pushRoster(); });
+    tr.appendChild(procTd);
+
+    for (let dayIdx = 0; dayIdx < state.numDays; dayIdx++) {
+      const d = dateForIndex(dayIdx);
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+      const key = empIdx + '-' + dayIdx;
+      const val = state.cells[key] || '';
+      const td = document.createElement('td');
+      td.className = 'cell' + (isWeekend ? ' weekend' : '');
+      const bg = colorForValue(val);
+      if (bg) td.style.background = bg;
+      td.textContent = val || (isWeekend ? '' : '10');
+
+      td.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = val;
+        td.textContent = '';
+        td.appendChild(input);
+        input.focus(); input.select();
+        const commit = () => {
+          const newVal = input.value.trim();
+          if (newVal) state.cells[key] = newVal;
+          else delete state.cells[key];
+          renderTable();
+          pushRoster();
+        };
+        input.addEventListener('blur', commit);
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
+      });
+
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  host.appendChild(table);
+}
+
+document.getElementById('addEmployeeBtn').addEventListener('click', () => {
+  state.employees.push({ name: 'NEW', process: 'welder' });
+  renderTable();
+  pushRoster();
+});
+
+document.getElementById('shiftWeekBtn').addEventListener('click', () => {
+  const start = new Date(state.startDate + 'T00:00:00');
+  const newStart = new Date(start.getTime() + 7 * 86400000);
+  const newCells = {};
+  Object.keys(state.cells).forEach(key => {
+    const [empIdx, dayIdx] = key.split('-').map(Number);
+    const shifted = dayIdx - 7;
+    if (shifted >= 0) newCells[empIdx + '-' + shifted] = state.cells[key];
+  });
+  state.cells = newCells;
+  state.startDate = newStart.toISOString().slice(0, 10);
+  renderTable();
+  pushRoster();
+});
+
+async function fetchLiveTimers() {
+  const panel = document.getElementById('liveTimersPanel');
+  const content = document.getElementById('liveTimersContent');
+  const applyBtn = document.getElementById('applyToGridBtn');
+  document.getElementById('applyResult').textContent = '';
+  applyBtn.style.display = 'none';
+  panel.style.display = 'block';
+  content.textContent = 'Loading...';
+  try {
+    const res = await fetch('/api/live-timers', { headers: apiHeaders() });
+    const result = await res.json();
+    if (result.error) {
+      content.innerHTML = '<span style="color:#b33c2b;">' + result.error + '</span>' +
+        (result.details ? '<br><span style="color:var(--text-muted);font-size:11px;">' + JSON.stringify(result.details).slice(0, 300) + '</span>' : '');
+      return;
+    }
+    const timers = result.data || [];
+    lastFetchedTimers = timers;
+    if (timers.length === 0) {
+      content.textContent = 'No one is currently clocked into a job.';
+      return;
+    }
+    content.innerHTML = '';
+    const table = document.createElement('table');
+    table.style.cssText = 'width:100%;border-collapse:collapse;';
+    const headRow = document.createElement('tr');
+    ['Operator', 'Job', 'Started (UTC)'].forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      th.style.cssText = 'text-align:left;padding:4px 8px;border-bottom:1px solid var(--border-strong);color:var(--text-muted);';
+      headRow.appendChild(th);
+    });
+    table.appendChild(headRow);
+    timers.forEach(t => {
+      const row = document.createElement('tr');
+      const opCell = document.createElement('td');
+      opCell.textContent = t.resolvedUserName || (t.startedById ? t.startedById + (t.userLookupError ? ' (lookup failed: ' + t.userLookupError + ')' : (t.rawUserData ? ' (raw: ' + JSON.stringify(t.rawUserData).slice(0,150) + ')' : '')) : 'Unknown');
+      const jobCell = document.createElement('td');
+      jobCell.textContent = t.resolvedJobName || (t.jobId ? t.jobId + (t.jobLookupError ? ' (lookup failed: ' + t.jobLookupError + ')' : '') : 'Unknown');
+      const startCell = document.createElement('td');
+      startCell.textContent = t.startedOnUtc ? new Date(t.startedOnUtc).toLocaleString() : '';
+      [opCell, jobCell, startCell].forEach(c => { c.style.cssText = 'padding:4px 8px;border-bottom:1px solid var(--border);'; row.appendChild(c); });
+      table.appendChild(row);
+    });
+    content.appendChild(table);
+    applyBtn.style.display = 'inline-block';
+  } catch (e) {
+    content.innerHTML = '<span style="color:#b33c2b;">Request failed: ' + e.message + '</span>';
+  }
+}
+
+let lastFetchedTimers = [];
+
+function findEmployeeIndex(operatorName) {
+  if (!operatorName) return -1;
+  const norm = operatorName.toLowerCase();
+  const firstWord = norm.split(' ')[0];
+  // check aliases first (handles nicknames like OVNI = Jehu)
+  let idx = state.employees.findIndex(e => e.aliases && e.aliases.some(a => a.toLowerCase() === norm || a.toLowerCase() === firstWord));
+  if (idx !== -1) return idx;
+  // exact or whole-name match
+  idx = state.employees.findIndex(e => e.name && norm === e.name.toLowerCase());
+  if (idx !== -1) return idx;
+  // first-name match: "Nestor Gutierrez" -> "NESTOR"
+  idx = state.employees.findIndex(e => e.name && e.name.toLowerCase() === firstWord);
+  if (idx !== -1) return idx;
+  // substring either direction
+  idx = state.employees.findIndex(e => e.name && (norm.includes(e.name.toLowerCase()) || e.name.toLowerCase().includes(firstWord)));
+  return idx;
+}
+
+function todayIndex() {
+  const start = new Date(state.startDate + 'T00:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return Math.round((today - start) / 86400000);
+}
+
+document.getElementById('applyToGridBtn').addEventListener('click', () => {
+  const dayIdx = todayIndex();
+  if (dayIdx < 0 || dayIdx >= state.numDays) {
+    document.getElementById('applyResult').innerHTML = '<span style="color:#b33c2b;">Today is outside the current 3-week window \u2014 use "Shift 1 week forward" first.</span>';
+    return;
+  }
+  const byEmployee = {};
+  const unmatched = [];
+  lastFetchedTimers.forEach(t => {
+    const job = t.resolvedJobName || t.jobId;
+    const empIdx = findEmployeeIndex(t.resolvedUserName);
+    if (empIdx === -1) {
+      unmatched.push((t.resolvedUserName || t.startedById || 'unknown operator') + ' \u2192 ' + job);
+      return;
+    }
+    if (!byEmployee[empIdx]) byEmployee[empIdx] = [];
+    if (!byEmployee[empIdx].includes(job)) byEmployee[empIdx].push(job);
+  });
+  let filledCount = 0;
+  Object.keys(byEmployee).forEach(empIdx => {
+    const key = empIdx + '-' + dayIdx;
+    state.cells[key] = byEmployee[empIdx].join('+');
+    filledCount++;
+  });
+  renderTable();
+  pushRoster();
+  let msg = 'Filled ' + filledCount + ' cell(s) for today.';
+  if (unmatched.length) {
+    msg += ' Could not match: ' + unmatched.join(', ') + ' \u2014 check the employee name spelling in the grid rows matches Fulcrum\'s name.';
+  }
+  document.getElementById('applyResult').innerHTML = '<span style="color:' + (unmatched.length ? 'var(--text-warning)' : 'var(--text-success, #3f6b2e)') + ';">' + msg + '</span>';
+});
+
+document.getElementById('syncBtn').addEventListener('click', fetchLiveTimers);
+document.getElementById('refreshLiveBtn').addEventListener('click', fetchLiveTimers);
+
+async function boot() {
+  const pinRequired = await checkPinRequired();
+  if (pinRequired && !pin) {
+    document.getElementById('pinGate').style.display = 'block';
+    document.getElementById('pinSubmit').addEventListener('click', async () => {
+      pin = document.getElementById('pinInput').value;
+      const data = await fetchRoster();
+      if (data === null) {
+        document.getElementById('pinError').style.display = 'block';
+        pin = '';
+        return;
+      }
+      sessionStorage.setItem('board-pin', pin);
+      document.getElementById('pinGate').style.display = 'none';
+      document.getElementById('appRoot').style.display = 'block';
+      state = (data && data.employees && data.employees.length) ? data : state;
+      renderTable();
+    });
+    return;
+  }
+  const data = await fetchRoster();
+  state = (data && data.employees && data.employees.length) ? data : state;
+  document.getElementById('appRoot').style.display = 'block';
+  renderTable();
+  document.getElementById('lastSaved').textContent = 'Loaded shared schedule';
+}
+boot();
+</script>
+</body>
+</html>

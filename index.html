@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundry Priority Board</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #1c1a17; --ink-800: #26231f; --ink-700: #34302a;
+    --paper: #f6f3ec; --card: #fbf9f4;
+    --steel: #4a5568; --rust: #c05621; --amber: #d69e2e;
+    --text-primary: #211f1b; --text-secondary: #5c574d; --text-muted: #948e80;
+    --text-danger: #b33c2b; --text-warning: #a3690f; --text-success: #3f6b2e;
+    --border: rgba(33,31,27,0.14); --border-strong: rgba(33,31,27,0.28);
+    --radius: 6px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 20px 80px;
+    background: var(--paper); color: var(--text-primary);
+    font-family: var(--font-body);
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px);
+    background-size: 100% 32px;
+    background-attachment: local;
+  }
+  .wrap { max-width: 800px; margin: 0 auto; }
+
+  .board-header { margin-bottom: 28px; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--rust); margin: 0 0 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before { content: ''; width: 16px; height: 2px; background: var(--rust); display: inline-block; }
+  h1.board-title {
+    font-family: var(--font-display); font-weight: 700; font-size: 26px;
+    margin: 0; letter-spacing: -0.01em; color: var(--ink-900);
+  }
+  .ruler {
+    height: 8px; margin: 14px 0 0; opacity: 0.5;
+    background-image: repeating-linear-gradient(90deg, var(--border-strong) 0, var(--border-strong) 1px, transparent 1px, transparent 8px);
+    background-size: 100% 8px; background-position: bottom;
+    background-repeat: repeat-x; background-position-y: bottom;
+  }
+
+  button {
+    font-family: var(--font-body); font-weight: 500; font-size: 13px;
+    background: var(--card); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); padding: 8px 13px; cursor: pointer;
+    color: var(--text-primary); transition: background 0.12s, border-color 0.12s;
+  }
+  button:hover { background: #fff; border-color: var(--ink-900); }
+  button:active { transform: translateY(1px); }
+  button#confirmAddBtn, button#syncBtn {
+    background: var(--ink-900); color: var(--paper); border-color: var(--ink-900);
+  }
+  button#confirmAddBtn:hover, button#syncBtn:hover { background: var(--rust); border-color: var(--rust); }
+
+  input, textarea {
+    font-family: var(--font-body); border: 1px solid var(--border-strong);
+    border-radius: var(--radius); padding: 8px 10px; background: #fff; color: var(--text-primary);
+  }
+  input:focus, textarea:focus, button:focus-visible {
+    outline: 2px solid var(--rust); outline-offset: 1px;
+  }
+
+  #pinGate {
+    max-width: 340px; margin: 100px auto; text-align: center;
+    background: var(--card); border: 1px solid var(--border-strong);
+    border-radius: 10px; padding: 32px 28px;
+  }
+  #pinGate p { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div id="pinGate" style="display:none;">
+  <p style="font-weight:600;">This board is protected</p>
+  <input type="password" id="pinInput" placeholder="Enter shared PIN" style="width:100%;margin-bottom:8px;" />
+  <button id="pinSubmit" style="width:100%;">Unlock</button>
+  <p id="pinError" style="color:var(--text-danger);font-size:13px;display:none;">Wrong PIN, try again.</p>
+</div>
+
+<div class="wrap" id="appRoot" style="display:none;">
+<div>
+<div class="board-header">
+  <p class="eyebrow">Urban Accessories &middot; Production</p>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+    <h1 class="board-title">Foundry Priority Board</h1>
+    <a href="/schedule.html" style="font-family:var(--font-mono);font-size:12px;color:var(--steel);text-decoration:none;border:1px solid var(--border-strong);border-radius:6px;padding:6px 10px;">3-Week Schedule &rarr;</a>
+  </div>
+  <div class="ruler"></div>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:8px;">
+  <p style="font-size:12px;color:var(--text-muted);margin:0;font-family:var(--font-mono);" id="lastSaved"></p>
+  <button id="addJobBtn" style="font-size:13px;">+ Add job</button>
+</div>
+
+<div id="addJobPanel" style="display:none;background:var(--card);border:1px solid var(--border-strong);border-radius:8px;padding:14px;margin-bottom:1rem;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+    <input type="text" id="newSo" placeholder="SO number" />
+    <input type="text" id="newCustomer" placeholder="Customer" />
+    <input type="number" id="newHours" placeholder="Total hours" step="0.1" />
+    <input type="date" id="newDue" />
+  </div>
+  <textarea id="newNotes" placeholder="Notes (optional)" style="width:100%;min-height:50px;font-size:13px;margin-bottom:8px;"></textarea>
+  <div style="display:flex;gap:8px;justify-content:flex-end;">
+    <button id="cancelAddBtn" style="font-size:13px;">Cancel</button>
+    <button id="confirmAddBtn" style="font-size:13px;">Add to top of list</button>
+  </div>
+  <p id="addError" style="font-size:13px;color:var(--text-danger);margin:8px 0 0;display:none;">Enter at least an SO number and customer.</p>
+</div>
+
+<div style="display:flex;gap:14px;margin-bottom:.75rem;font-size:11px;color:var(--text-secondary);flex-wrap:wrap;">
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-danger);margin-right:4px;"></span>Materials missing / Drawings missing</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-warning);margin-right:4px;"></span>Materials ordered</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-success);margin-right:4px;"></span>Materials received / Drawings complete</span>
+</div>
+
+<div id="activeList"></div>
+
+<div style="margin-top:1.25rem;">
+  <button id="toggleShippedBtn" style="font-size:13px;width:100%;text-align:left;">
+    <span id="shippedToggleLabel">Show shipped/completed (0)</span>
+  </button>
+  <div id="shippedList" style="display:none;margin-top:8px;"></div>
+</div>
+</div>
+</div>
+
+<script>
+const PROCESSES = [
+  { key: 'cutShop', label: 'Cut Shop', color: '#2a78d6' },
+  { key: 'foundry', label: 'Foundry', color: '#1baf7a' },
+  { key: 'foundryGrind', label: 'Foundry Grind', color: '#eda100' },
+  { key: 'fabShop', label: 'Fab Shop', color: '#6250d6' },
+  { key: 'powderCoat', label: 'Powder Coat', color: '#e87ba4' },
+  { key: 'finish', label: 'Finish', color: '#eb6834' },
+  { key: 'packShip', label: 'Pack and Ship', color: '#898781' }
+];
+
+let state = { active: [], shipped: [] };
+let expandedId = null;
+let pin = sessionStorage.getItem('board-pin') || '';
+let saveTimer = null;
+
+function apiHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (pin) h['x-board-pin'] = pin;
+  return h;
+}
+
+async function checkPinRequired() {
+  const res = await fetch('/api/pin-required');
+  const data = await res.json();
+  return data.required;
+}
+
+async function fetchState() {
+  const res = await fetch('/api/state', { headers: apiHeaders() });
+  if (res.status === 401) return null;
+  return res.json();
+}
+
+async function pushState() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const res = await fetch('/api/state', {
+      method: 'POST',
+      headers: apiHeaders(),
+      body: JSON.stringify(state)
+    });
+    if (res.ok) {
+      const now = new Date();
+      document.getElementById('lastSaved').textContent = 'Saved ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    } else {
+      document.getElementById('lastSaved').textContent = 'Save failed - check connection';
+    }
+  }, 400);
+}
+
+function fmtDue(due) {
+  if (!due) return 'No due date';
+  const d = new Date(due + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diffDays = Math.round((d - today) / 86400000);
+  const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (diffDays < 0) return label + ' (' + Math.abs(diffDays) + 'd late)';
+  if (diffDays <= 3) return label + ' (due soon)';
+  return label;
+}
+function dueColor(due) {
+  if (!due) return 'var(--text-muted)';
+  const d = new Date(due + 'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diffDays = Math.round((d - today) / 86400000);
+  if (diffDays < 0) return 'var(--text-danger)';
+  if (diffDays <= 3) return 'var(--text-warning)';
+  return 'var(--text-secondary)';
+}
+function genId(so) { return so + '-' + Date.now() + '-' + Math.floor(Math.random()*1000); }
+function ensureJobShape(job) {
+  if (!job.processHours) job.processHours = { cutShop: 0, foundry: 0, foundryGrind: 0, fabShop: 0, powderCoat: 0, finish: 0, packShip: 0 };
+  if (!job.materialsStatus) job.materialsStatus = 'missing';
+  if (!job.drawingsStatus) job.drawingsStatus = 'missing';
+  return job;
+}
+function processTotal(job) {
+  const sum = PROCESSES.reduce((a, p) => a + (job.processHours[p.key] || 0), 0);
+  return sum > 0 ? sum : job.hours;
+}
+function materialsDotColor(s) { return s === 'received' ? 'var(--text-success)' : s === 'ordered' ? 'var(--text-warning)' : 'var(--text-danger)'; }
+function materialsLabel(s) { return s === 'received' ? 'Received' : s === 'ordered' ? 'Ordered' : 'Missing'; }
+function nextMaterialsStatus(s) { return s === 'missing' ? 'ordered' : s === 'ordered' ? 'received' : 'missing'; }
+function drawingsDotColor(s) { return s === 'complete' ? 'var(--text-success)' : 'var(--text-danger)'; }
+function drawingsLabel(s) { return s === 'complete' ? 'Complete' : 'Missing'; }
+
+function renderActive() {
+  const container = document.getElementById('activeList');
+  container.innerHTML = '';
+  if (state.active.length === 0) {
+    const empty = document.createElement('p');
+    empty.style.cssText = 'font-size:13px;color:var(--text-muted);padding:1rem 0;';
+    empty.textContent = 'No active jobs. Add one above.';
+    container.appendChild(empty);
+    return;
+  }
+  state.active.forEach((job, idx) => {
+    ensureJobShape(job);
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-bottom:6px;';
+
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 0 rgba(33,31,27,0.03);' + (job.status === 'blocked' ? 'border-left:3px solid var(--amber);' : '');
+
+    const rankBadge = document.createElement('div');
+    rankBadge.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--paper);background:var(--ink-800);min-width:26px;height:22px;line-height:22px;text-align:center;border-radius:4px;flex-shrink:0;';
+    rankBadge.textContent = String(idx + 1).padStart(2, '0');
+    row.appendChild(rankBadge);
+
+    const upBtn = document.createElement('button');
+    upBtn.innerHTML = '&#9650;';
+    upBtn.style.cssText = 'padding:2px 8px;min-width:0;font-size:9px;line-height:1;';
+    upBtn.disabled = idx === 0;
+    upBtn.style.opacity = idx === 0 ? '0.3' : '1';
+    upBtn.addEventListener('click', () => moveJob(idx, -1));
+
+    const downBtn = document.createElement('button');
+    downBtn.innerHTML = '&#9660;';
+    downBtn.style.cssText = 'padding:2px 8px;min-width:0;font-size:9px;line-height:1;';
+    downBtn.disabled = idx === state.active.length - 1;
+    downBtn.style.opacity = idx === state.active.length - 1 ? '0.3' : '1';
+    downBtn.addEventListener('click', () => moveJob(idx, 1));
+
+    const arrows = document.createElement('div');
+    arrows.style.cssText = 'display:flex;flex-direction:column;gap:2px;';
+    arrows.appendChild(upBtn); arrows.appendChild(downBtn);
+    row.appendChild(arrows);
+
+    const info = document.createElement('div');
+    info.style.cssText = 'flex:1;min-width:0;cursor:pointer;';
+    info.addEventListener('click', () => { expandedId = expandedId === job.id ? null : job.id; renderActive(); });
+    const title = document.createElement('p');
+    title.style.cssText = 'font-size:14px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    const caret = document.createElement('span');
+    caret.style.cssText = 'color:var(--text-muted);font-size:11px;margin-right:4px;';
+    caret.textContent = expandedId === job.id ? '\u25be' : '\u25b8';
+    const soSpan = document.createElement('span');
+    soSpan.style.cssText = 'font-family:var(--font-mono);font-weight:600;color:var(--rust);letter-spacing:0.01em;';
+    soSpan.textContent = 'SO ' + job.so;
+    const custSpan = document.createElement('span');
+    custSpan.style.cssText = 'font-weight:500;color:var(--text-primary);';
+    custSpan.textContent = '  \u2014  ' + job.customer;
+    title.appendChild(caret); title.appendChild(soSpan); title.appendChild(custSpan);
+    info.appendChild(title);
+
+    const sub = document.createElement('div');
+    sub.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:2px;';
+
+    const dueSpan = document.createElement('span');
+    dueSpan.style.cssText = 'font-family:var(--font-mono);font-size:11px;color:' + dueColor(job.due) + ';cursor:pointer;text-decoration:underline dotted;';
+    dueSpan.textContent = fmtDue(job.due);
+    dueSpan.title = 'Click to edit due date';
+    dueSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const input = document.createElement('input');
+      input.type = 'date'; input.value = job.due || '';
+      input.style.cssText = 'font-size:12px;padding:2px 4px;';
+      input.addEventListener('click', ev => ev.stopPropagation());
+      input.addEventListener('change', () => { job.due = input.value || null; renderActive(); pushState(); });
+      input.addEventListener('blur', () => renderActive());
+      sub.replaceChild(input, dueSpan);
+      input.focus();
+    });
+    sub.appendChild(dueSpan);
+
+    const hoursSpan = document.createElement('span');
+    hoursSpan.style.cssText = 'font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);cursor:pointer;text-decoration:underline dotted;';
+    hoursSpan.textContent = '\u00b7  ' + Math.round(processTotal(job)).toLocaleString() + ' hrs';
+    hoursSpan.title = 'Click to edit total hours directly (clears any per-process breakdown)';
+    hoursSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const input = document.createElement('input');
+      input.type = 'number'; input.step = '0.1'; input.min = '0'; input.value = processTotal(job);
+      input.style.cssText = 'font-size:12px;padding:2px 4px;width:80px;';
+      input.addEventListener('click', ev => ev.stopPropagation());
+      input.addEventListener('change', () => {
+        job.hours = parseFloat(input.value) || 0;
+        PROCESSES.forEach(p => { job.processHours[p.key] = 0; });
+        renderActive(); pushState();
+      });
+      input.addEventListener('blur', () => renderActive());
+      sub.replaceChild(input, hoursSpan);
+      input.focus(); input.select();
+    });
+    sub.appendChild(hoursSpan);
+
+    const assignSpan = document.createElement('span');
+    assignSpan.style.cssText = 'font-family:var(--font-mono);font-size:11px;color:' + (job.assignedTo ? 'var(--text-secondary)' : 'var(--text-muted)') + ';cursor:pointer;text-decoration:underline dotted;';
+    assignSpan.textContent = '\u00b7  ' + (job.assignedTo ? '\ud83d\udc64 ' + job.assignedTo : 'Unassigned');
+    assignSpan.title = 'Click to set who is working this job';
+    assignSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const input = document.createElement('input');
+      input.type = 'text'; input.value = job.assignedTo || ''; input.placeholder = 'Name(s)';
+      input.style.cssText = 'font-size:12px;padding:2px 4px;width:100px;';
+      input.addEventListener('click', ev => ev.stopPropagation());
+      input.addEventListener('change', () => { job.assignedTo = input.value.trim(); renderActive(); pushState(); });
+      input.addEventListener('blur', () => renderActive());
+      sub.replaceChild(input, assignSpan);
+      input.focus(); input.select();
+    });
+    sub.appendChild(assignSpan);
+    info.appendChild(sub);
+
+    if (job.notes) {
+      const notesEl = document.createElement('p');
+      notesEl.style.cssText = 'font-size:11px;margin:2px 0 0;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+      notesEl.textContent = job.notes;
+      info.appendChild(notesEl);
+    }
+    row.appendChild(info);
+
+    const matBtn = document.createElement('button');
+    matBtn.style.cssText = 'font-size:11px;padding:6px 8px;display:flex;align-items:center;gap:4px;';
+    matBtn.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:' + materialsDotColor(job.materialsStatus) + ';display:inline-block;"></span>Mat: ' + materialsLabel(job.materialsStatus);
+    matBtn.title = 'Click to cycle: Missing \u2192 Ordered \u2192 Received';
+    matBtn.addEventListener('click', () => { job.materialsStatus = nextMaterialsStatus(job.materialsStatus); renderActive(); pushState(); });
+    row.appendChild(matBtn);
+
+    const drawBtn = document.createElement('button');
+    drawBtn.style.cssText = 'font-size:11px;padding:6px 8px;display:flex;align-items:center;gap:4px;';
+    drawBtn.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:' + drawingsDotColor(job.drawingsStatus) + ';display:inline-block;"></span>Dwg: ' + drawingsLabel(job.drawingsStatus);
+    drawBtn.title = 'Click to toggle Missing / Complete';
+    drawBtn.addEventListener('click', () => { job.drawingsStatus = job.drawingsStatus === 'complete' ? 'missing' : 'complete'; renderActive(); pushState(); });
+    row.appendChild(drawBtn);
+
+    const blockBtn = document.createElement('button');
+    blockBtn.style.cssText = 'font-size:12px;padding:6px 10px;';
+    blockBtn.textContent = job.status === 'blocked' ? 'Blocked' : 'Flag';
+    blockBtn.addEventListener('click', () => toggleBlocked(idx));
+    row.appendChild(blockBtn);
+
+    const shipBtn = document.createElement('button');
+    shipBtn.style.cssText = 'font-size:12px;padding:6px 10px;';
+    shipBtn.textContent = 'Ship';
+    shipBtn.addEventListener('click', () => shipJob(idx));
+    row.appendChild(shipBtn);
+
+    wrap.appendChild(row);
+
+    if (expandedId === job.id) {
+      const panel = document.createElement('div');
+      panel.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:4px;';
+      const panelTitle = document.createElement('p');
+      panelTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 10px;color:var(--text-muted);';
+      panelTitle.textContent = 'Hours needed per process';
+      panel.appendChild(panelTitle);
+
+      const maxVal = Math.max(1, ...PROCESSES.map(p => job.processHours[p.key] || 0));
+      PROCESSES.forEach(p => {
+        const prow = document.createElement('div');
+        prow.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px;';
+        const plabel = document.createElement('span');
+        plabel.style.cssText = 'font-size:12px;width:96px;flex-shrink:0;color:var(--text-secondary);';
+        plabel.textContent = p.label;
+        prow.appendChild(plabel);
+        const barWrap = document.createElement('div');
+        barWrap.style.cssText = 'flex:1;height:14px;background:var(--paper);border-radius:4px;overflow:hidden;';
+        const bar = document.createElement('div');
+        const val = job.processHours[p.key] || 0;
+        const pct = Math.min(100, (val / maxVal) * 100);
+        bar.style.cssText = 'height:100%;width:' + pct + '%;background:' + p.color + ';transition:width .15s;';
+        barWrap.appendChild(bar);
+        prow.appendChild(barWrap);
+        const numInput = document.createElement('input');
+        numInput.type = 'number'; numInput.step = '0.1'; numInput.min = '0'; numInput.value = val;
+        numInput.style.cssText = 'width:64px;font-size:12px;padding:4px 6px;flex-shrink:0;';
+        numInput.addEventListener('change', () => { job.processHours[p.key] = parseFloat(numInput.value) || 0; renderActive(); pushState(); });
+        prow.appendChild(numInput);
+        panel.appendChild(prow);
+      });
+
+      const totalRow = document.createElement('p');
+      totalRow.style.cssText = 'font-family:var(--font-mono);font-size:12px;font-weight:600;margin:10px 0 0;padding-top:8px;border-top:1px solid var(--border);color:var(--ink-900);';
+      totalRow.textContent = 'TOTAL \u2014 ' + Math.round(processTotal(job)).toLocaleString() + ' hrs';
+      panel.appendChild(totalRow);
+      wrap.appendChild(panel);
+    }
+    container.appendChild(wrap);
+  });
+}
+
+function renderShipped() {
+  const container = document.getElementById('shippedList');
+  container.innerHTML = '';
+  document.getElementById('shippedToggleLabel').textContent = 'Show shipped/completed (' + state.shipped.length + ')';
+  state.shipped.slice().reverse().forEach((job) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--card);border:1px dashed var(--border-strong);border-radius:8px;margin-bottom:4px;opacity:0.65;';
+    const info = document.createElement('div');
+    info.style.cssText = 'flex:1;min-width:0;';
+    const title = document.createElement('p');
+    title.style.cssText = 'font-size:13px;margin:0;text-decoration:line-through;font-family:var(--font-mono);';
+    title.textContent = 'SO ' + job.so + ' \u2014 ' + job.customer;
+    info.appendChild(title);
+    row.appendChild(info);
+    const restoreBtn = document.createElement('button');
+    restoreBtn.style.cssText = 'font-size:12px;padding:5px 10px;';
+    restoreBtn.textContent = 'Restore';
+    restoreBtn.addEventListener('click', () => restoreJob(job.id));
+    row.appendChild(restoreBtn);
+    container.appendChild(row);
+  });
+}
+
+function moveJob(idx, dir) {
+  const n = idx + dir;
+  if (n < 0 || n >= state.active.length) return;
+  const t = state.active[idx]; state.active[idx] = state.active[n]; state.active[n] = t;
+  renderActive(); pushState();
+}
+function toggleBlocked(idx) { state.active[idx].status = state.active[idx].status === 'blocked' ? 'active' : 'blocked'; renderActive(); pushState(); }
+function shipJob(idx) {
+  const job = state.active.splice(idx, 1)[0];
+  job.status = 'shipped'; job.shippedDate = new Date().toISOString().slice(0,10);
+  state.shipped.push(job); renderActive(); renderShipped(); pushState();
+}
+function restoreJob(id) {
+  const i = state.shipped.findIndex(j => j.id === id);
+  if (i === -1) return;
+  const job = state.shipped.splice(i, 1)[0];
+  job.status = 'active'; delete job.shippedDate;
+  state.active.push(job); renderActive(); renderShipped(); pushState();
+}
+
+document.getElementById('addJobBtn').addEventListener('click', () => { document.getElementById('addJobPanel').style.display = 'block'; });
+document.getElementById('cancelAddBtn').addEventListener('click', () => { document.getElementById('addJobPanel').style.display = 'none'; document.getElementById('addError').style.display = 'none'; });
+document.getElementById('confirmAddBtn').addEventListener('click', () => {
+  const so = document.getElementById('newSo').value.trim();
+  const customer = document.getElementById('newCustomer').value.trim();
+  const hours = parseFloat(document.getElementById('newHours').value) || 0;
+  const due = document.getElementById('newDue').value || null;
+  const notes = document.getElementById('newNotes').value.trim();
+  if (!so || !customer) { document.getElementById('addError').style.display = 'block'; return; }
+  document.getElementById('addError').style.display = 'none';
+  const newJob = ensureJobShape({ id: genId(so), so, customer, hours, due, notes, status: 'active' });
+  state.active.unshift(newJob);
+  document.getElementById('newSo').value = ''; document.getElementById('newCustomer').value = '';
+  document.getElementById('newHours').value = ''; document.getElementById('newDue').value = ''; document.getElementById('newNotes').value = '';
+  document.getElementById('addJobPanel').style.display = 'none';
+  renderActive(); pushState();
+});
+document.getElementById('toggleShippedBtn').addEventListener('click', () => {
+  const el = document.getElementById('shippedList');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+});
+
+async function boot() {
+  const pinRequired = await checkPinRequired();
+  if (pinRequired && !pin) {
+    document.getElementById('pinGate').style.display = 'block';
+    document.getElementById('pinSubmit').addEventListener('click', async () => {
+      pin = document.getElementById('pinInput').value;
+      const data = await fetchState();
+      if (data === null) {
+        document.getElementById('pinError').style.display = 'block';
+        pin = '';
+        return;
+      }
+      sessionStorage.setItem('board-pin', pin);
+      document.getElementById('pinGate').style.display = 'none';
+      document.getElementById('appRoot').style.display = 'block';
+      state = data.active ? data : { active: [], shipped: [] };
+      renderActive(); renderShipped();
+    });
+    return;
+  }
+  const data = await fetchState();
+  state = (data && data.active) ? data : { active: [], shipped: [] };
+  document.getElementById('appRoot').style.display = 'block';
+  renderActive(); renderShipped();
+  document.getElementById('lastSaved').textContent = 'Loaded shared board';
+}
+boot();
+</script>
+</body>
+</html>

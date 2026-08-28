@@ -1,0 +1,18 @@
+{
+  "employees": [
+    {"name": "SCOTT BEAVER", "process": "Pattern Making", "aliases": []},
+    {"name": "ABRAHAM CAMACHO", "process": "Pattern Modification", "aliases": []},
+    {"name": "ELPIDIO", "process": "Foundry - Cast", "aliases": ["Elpidio Camacho-Gutierrez"]},
+    {"name": "CRISPIN", "process": "Foundry - Cast", "aliases": ["Crispin Lopez-Ramirez"]},
+    {"name": "JAMES THOMPSON", "process": "Foundry - Cast / Grind", "aliases": []},
+    {"name": "ARTURO", "process": "Foundry - Grind", "aliases": ["Arturo Encino-Martinez"]},
+    {"name": "ANDRES", "process": "Foundry - Grind", "aliases": ["Andres Cosme-Galindo"]},
+    {"name": "ALEX", "process": "Foundry - Grind", "aliases": ["Alex Alvarez-Gomez"]},
+    {"name": "ROBERTO", "process": "Foundry - Grind", "aliases": ["Roberto Magdonel-Arcos"]},
+    {"name": "MIGUEL", "process": "Foundry - Grind / Tree Grate Fit", "aliases": ["Miguel Cruz-Bruno"]},
+    {"name": "SEBASTIAN", "process": "Foundry - Tree Grate / Trench Fit", "aliases": ["Sebastian Diaz-Sanches"]}
+  ],
+  "startDate": "2026-08-28",
+  "numDays": 21,
+  "cells": {}
+}

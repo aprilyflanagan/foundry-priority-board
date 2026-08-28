@@ -1,0 +1,805 @@
+{
+  "active": [
+    {
+      "id": "301457-seed",
+      "so": "301457",
+      "customer": "Landscape Workshop, LLC",
+      "hours": 128.7,
+      "due": "2026-05-12",
+      "notes": "Pattern 80.0h + Foundry 20.0h + Grind 28.7h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301603-seed",
+      "so": "301603",
+      "customer": "The Whiting-Turner Contracting Company",
+      "hours": 17.5,
+      "due": "2026-05-25",
+      "notes": "Foundry 7.0h + Grind 10.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301645-seed",
+      "so": "301645",
+      "customer": "SPRUCE & GANDER",
+      "hours": 64.8,
+      "due": "2026-06-12",
+      "notes": "Pattern 6.0h + Grind 58.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302110-seed",
+      "so": "302110",
+      "customer": "Urban Accessories Inc",
+      "hours": 100.0,
+      "due": "2026-06-19",
+      "notes": "Foundry 8.3h + Grind 91.7h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301947-seed",
+      "so": "301947",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 1.6,
+      "due": "2026-07-15",
+      "notes": "Foundry 0.8h + Grind 0.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301967-seed",
+      "so": "301967",
+      "customer": "BRIGHTVIEW",
+      "hours": 32.0,
+      "due": "2026-07-22",
+      "notes": "Foundry 12.0h + Grind 20.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302024-seed",
+      "so": "302024",
+      "customer": "Alto Construction",
+      "hours": 2.0,
+      "due": "2026-07-27",
+      "notes": "Foundry 1.0h + Grind 1.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301909-seed",
+      "so": "301909",
+      "customer": "WASHINGTON STATE FAIR",
+      "hours": 1.3,
+      "due": "2026-07-27",
+      "notes": "Foundry 0.5h + Grind 0.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301926-seed",
+      "so": "301926",
+      "customer": "WASHINGTON STATE FAIR",
+      "hours": 1.3,
+      "due": "2026-07-27",
+      "notes": "Foundry 0.5h + Grind 0.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301968-seed",
+      "so": "301968",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 36.0,
+      "due": "2026-07-28",
+      "notes": "Pattern 10.0h + Foundry 8.0h + Grind 18.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302055-seed",
+      "so": "302055",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 16.0,
+      "due": "2026-07-31",
+      "notes": "Foundry 8.0h + Grind 8.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302005-seed",
+      "so": "302005",
+      "customer": "SPRUCE & GANDER",
+      "hours": 61.0,
+      "due": "2026-08-03",
+      "notes": "Pattern 16.0h + Foundry 15.0h + Grind 30.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301831-seed",
+      "so": "301831",
+      "customer": "Gariup Construction CO.",
+      "hours": 7.0,
+      "due": "2026-08-04",
+      "notes": "Foundry 3.0h + Grind 4.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302241-seed",
+      "so": "302241",
+      "customer": "Gibson Landscape",
+      "hours": 10.0,
+      "due": "2026-08-07",
+      "notes": "Foundry 3.0h + Grind 7.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302047-seed",
+      "so": "302047",
+      "customer": "Contours Landscape Co.",
+      "hours": 9.3,
+      "due": "2026-08-10",
+      "notes": "Foundry 4.0h + Grind 5.3h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301994-seed",
+      "so": "301994",
+      "customer": "SPRUCE & GANDER",
+      "hours": 430.8,
+      "due": "2026-08-13",
+      "notes": "Pattern 200.0h + Grind 230.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302138-seed",
+      "so": "302138",
+      "customer": "PLAYSPACE DESIGNS",
+      "hours": 1.5,
+      "due": "2026-08-13",
+      "notes": "Grind 1.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302079-seed",
+      "so": "302079",
+      "customer": "Steve Beam Construction, Inc.",
+      "hours": 8.0,
+      "due": "2026-08-14",
+      "notes": "Pattern 8.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302083-seed",
+      "so": "302083",
+      "customer": "SPRUCE & GANDER",
+      "hours": 36.0,
+      "due": "2026-08-14",
+      "notes": "Foundry 13.5h + Grind 22.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302116-seed",
+      "so": "302116",
+      "customer": "HD Fowler - Idaho Falls Branch",
+      "hours": 10.8,
+      "due": "2026-08-17",
+      "notes": "Foundry 1.6h + Grind 9.2h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302095-seed",
+      "so": "302095",
+      "customer": "Emanouil",
+      "hours": 4.0,
+      "due": "2026-08-20",
+      "notes": "Foundry 2.0h + Grind 2.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302089-seed",
+      "so": "302089",
+      "customer": "Bainbridge Youth Svc",
+      "hours": 4.5,
+      "due": "2026-08-20",
+      "notes": "Pattern 4.0h + Foundry 0.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302097-seed",
+      "so": "302097",
+      "customer": "SPRUCE & GANDER",
+      "hours": 20.8,
+      "due": "2026-08-21",
+      "notes": "Pattern 1.0h + Foundry 7.0h + Grind 12.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302188-seed",
+      "so": "302188",
+      "customer": "HD Fowler - Boise Branch",
+      "hours": 8.3,
+      "due": "2026-08-21",
+      "notes": "Foundry 3.0h + Grind 5.3h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "301999-seed",
+      "so": "301999",
+      "customer": "HD Fowler",
+      "hours": 22.3,
+      "due": "2026-08-21",
+      "notes": "Foundry 7.5h + Grind 14.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302094-seed",
+      "so": "302094",
+      "customer": "SPRUCE & GANDER",
+      "hours": 16.5,
+      "due": "2026-08-21",
+      "notes": "Foundry 3.7h + Grind 12.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302147-seed",
+      "so": "302147",
+      "customer": "Parkworks Solutions Corp. | MAKR Group Company",
+      "hours": 17.5,
+      "due": "2026-08-21",
+      "notes": "Foundry 7.5h + Grind 10.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302123-seed",
+      "so": "302123",
+      "customer": "PLAYSPACE DESIGNS",
+      "hours": 78.0,
+      "due": "2026-08-24",
+      "notes": "Foundry 24.0h + Grind 54.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302021-seed",
+      "so": "302021",
+      "customer": "PLAYSPACE DESIGNS",
+      "hours": 122.7,
+      "due": "2026-08-25",
+      "notes": "Pattern 32.0h + Foundry 39.2h + Grind 51.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302117-seed",
+      "so": "302117",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 12.0,
+      "due": "2026-08-25",
+      "notes": "Foundry 5.0h + Grind 7.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302052-seed",
+      "so": "302052",
+      "customer": "SPRUCE & GANDER",
+      "hours": 52.4,
+      "due": "2026-08-26",
+      "notes": "Pattern 8.0h + Foundry 4.6h + Grind 39.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302129-seed",
+      "so": "302129",
+      "customer": "PLAYSPACE DESIGNS",
+      "hours": 1.4,
+      "due": "2026-08-26",
+      "notes": "Foundry 1.0h + Grind 0.4h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302172-seed",
+      "so": "302172",
+      "customer": "SPRUCE & GANDER",
+      "hours": 5.3,
+      "due": "2026-08-27",
+      "notes": "Foundry 2.5h + Grind 2.8h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302100-seed",
+      "so": "302100",
+      "customer": "SPRUCE & GANDER",
+      "hours": 10.0,
+      "due": "2026-08-28",
+      "notes": "Foundry 3.8h + Grind 6.2h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302145-seed",
+      "so": "302145",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 30.0,
+      "due": "2026-08-31",
+      "notes": "Foundry 10.0h + Grind 20.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302135-seed",
+      "so": "302135",
+      "customer": "SPRUCE & GANDER",
+      "hours": 12.0,
+      "due": "2026-09-01",
+      "notes": "Foundry 6.0h + Grind 6.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302131-seed",
+      "so": "302131",
+      "customer": "Parkworks Solutions Corp. | MAKR Group Company",
+      "hours": 17.5,
+      "due": "2026-09-01",
+      "notes": "Foundry 7.5h + Grind 10.0h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302090-seed",
+      "so": "302090",
+      "customer": "HD Fowler",
+      "hours": 6.5,
+      "due": "2026-09-02",
+      "notes": "Foundry 3.0h + Grind 3.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302056-seed",
+      "so": "302056",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 87.3,
+      "due": "2026-09-03",
+      "notes": "Pattern 54.4h + Foundry 12.0h + Grind 20.9h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    },
+    {
+      "id": "302088-seed",
+      "so": "302088",
+      "customer": "Mid-Atlantic Products, Inc.",
+      "hours": 5.0,
+      "due": "2026-09-04",
+      "notes": "Foundry 2.5h + Grind 2.5h",
+      "status": "active",
+      "processHours": {
+        "cutShop": 0,
+        "foundry": 0,
+        "foundryGrind": 0,
+        "fabShop": 0,
+        "powderCoat": 0,
+        "finish": 0,
+        "packShip": 0
+      },
+      "materialsStatus": "missing",
+      "drawingsStatus": "missing"
+    }
+  ],
+  "shipped": []
+}
