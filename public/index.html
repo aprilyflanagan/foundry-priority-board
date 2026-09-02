@@ -120,9 +120,10 @@
 </div>
 
 <div style="display:flex;gap:14px;margin-bottom:.75rem;font-size:11px;color:var(--text-secondary);flex-wrap:wrap;">
-  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-danger);margin-right:4px;"></span>Materials missing / Drawings missing</span>
-  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-warning);margin-right:4px;"></span>Materials ordered</span>
-  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-success);margin-right:4px;"></span>Materials received / Drawings complete</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-danger);margin-right:4px;"></span>Missing / Not started</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-warning);margin-right:4px;"></span>Ordered / In progress</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-success);margin-right:4px;"></span>Received / Complete</span>
+  <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--text-muted);margin-right:4px;"></span>TBD</span>
 </div>
 
 <div id="activeList"></div>
@@ -211,6 +212,7 @@ function ensureJobShape(job) {
   if (!job.processHours) job.processHours = { cutShop: 0, foundry: 0, foundryGrind: 0, fabShop: 0, powderCoat: 0, finish: 0, packShip: 0 };
   if (!job.materialsStatus) job.materialsStatus = 'missing';
   if (!job.drawingsStatus) job.drawingsStatus = 'missing';
+  if (!job.powderCoatStatus) job.powderCoatStatus = 'not-started';
   return job;
 }
 function processTotal(job) {
@@ -220,31 +222,40 @@ function processTotal(job) {
 function materialsDotColor(s) {
   if (s === 'received') return 'var(--text-success)';
   if (s === 'ordered') return 'var(--text-warning)';
-  if (s === 'pc') return '#5b7fa6';
   if (s === 'tbd') return 'var(--text-muted)';
   return 'var(--text-danger)';
 }
 function materialsLabel(s) {
   if (s === 'received') return 'Received';
   if (s === 'ordered') return 'Ordered';
-  if (s === 'pc') return 'PC';
   if (s === 'tbd') return 'TBD';
   return 'Missing';
 }
 function drawingsDotColor(s) {
   if (s === 'complete') return 'var(--text-success)';
-  if (s === 'pc') return '#5b7fa6';
   if (s === 'tbd') return 'var(--text-muted)';
   return 'var(--text-danger)';
 }
 function drawingsLabel(s) {
   if (s === 'complete') return 'Complete';
-  if (s === 'pc') return 'PC';
   if (s === 'tbd') return 'TBD';
   return 'Missing';
 }
-const MATERIALS_OPTIONS = [['missing','Missing'],['ordered','Ordered'],['pc','PC'],['received','Received'],['tbd','TBD']];
-const DRAWINGS_OPTIONS = [['missing','Missing'],['pc','PC'],['complete','Complete'],['tbd','TBD']];
+function pcDotColor(s) {
+  if (s === 'complete') return 'var(--text-success)';
+  if (s === 'in-progress') return 'var(--text-warning)';
+  if (s === 'tbd') return 'var(--text-muted)';
+  return 'var(--text-danger)';
+}
+function pcLabel(s) {
+  if (s === 'complete') return 'Complete';
+  if (s === 'in-progress') return 'In Progress';
+  if (s === 'tbd') return 'TBD';
+  return 'Not Started';
+}
+const MATERIALS_OPTIONS = [['missing','Missing'],['ordered','Ordered'],['received','Received'],['tbd','TBD']];
+const DRAWINGS_OPTIONS = [['missing','Missing'],['complete','Complete'],['tbd','TBD']];
+const PC_OPTIONS = [['not-started','Not Started'],['in-progress','In Progress'],['complete','Complete'],['tbd','TBD']];
 
 function renderActive() {
   const container = document.getElementById('activeList');
@@ -474,6 +485,28 @@ function renderActive() {
     drawWrap.appendChild(drawSelect);
     row.appendChild(drawWrap);
 
+    const pcWrap = document.createElement('div');
+    pcWrap.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:11px;padding:4px 6px;border:1px solid var(--border-strong);border-radius:6px;';
+    const pcDot = document.createElement('span');
+    pcDot.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + pcDotColor(job.powderCoatStatus) + ';display:inline-block;flex-shrink:0;';
+    pcWrap.appendChild(pcDot);
+    const pcLabelEl = document.createElement('span');
+    pcLabelEl.textContent = 'PC:';
+    pcLabelEl.style.cssText = 'color:var(--text-muted);';
+    pcWrap.appendChild(pcLabelEl);
+    const pcSelect = document.createElement('select');
+    pcSelect.style.cssText = 'font-size:11px;border:none;background:transparent;color:var(--text-primary);padding:0;';
+    PC_OPTIONS.forEach(([val, label]) => {
+      const opt = document.createElement('option');
+      opt.value = val; opt.textContent = label;
+      if (job.powderCoatStatus === val) opt.selected = true;
+      pcSelect.appendChild(opt);
+    });
+    pcSelect.addEventListener('click', e => e.stopPropagation());
+    pcSelect.addEventListener('change', () => { job.powderCoatStatus = pcSelect.value; renderActive(); pushState(); });
+    pcWrap.appendChild(pcSelect);
+    row.appendChild(pcWrap);
+
     const blockBtn = document.createElement('button');
     blockBtn.style.cssText = 'font-size:12px;padding:6px 10px;';
     blockBtn.textContent = job.status === 'blocked' ? 'Blocked' : 'Flag';
@@ -492,16 +525,17 @@ function renderActive() {
       const panel = document.createElement('div');
       panel.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:4px;';
 
-      if (job.notes) {
-        const notesTitle = document.createElement('p');
-        notesTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 6px;color:var(--text-muted);';
-        notesTitle.textContent = 'Notes';
-        panel.appendChild(notesTitle);
-        const notesFull = document.createElement('p');
-        notesFull.style.cssText = 'font-size:13px;line-height:1.5;margin:0 0 14px;color:var(--text-primary);white-space:pre-wrap;';
-        notesFull.textContent = job.notes;
-        panel.appendChild(notesFull);
-      }
+      const notesTitle = document.createElement('p');
+      notesTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 6px;color:var(--text-muted);';
+      notesTitle.textContent = 'Notes';
+      panel.appendChild(notesTitle);
+      const notesArea = document.createElement('textarea');
+      notesArea.value = job.notes || '';
+      notesArea.placeholder = 'Add a note...';
+      notesArea.style.cssText = 'width:100%;min-height:70px;font-size:13px;line-height:1.5;padding:8px;border:1px solid var(--border-strong);border-radius:6px;background:var(--paper);color:var(--text-primary);font-family:inherit;margin:0 0 14px;resize:vertical;';
+      notesArea.addEventListener('click', e => e.stopPropagation());
+      notesArea.addEventListener('change', () => { job.notes = notesArea.value; renderActive(); pushState(); });
+      panel.appendChild(notesArea);
 
       const panelTitle = document.createElement('p');
       panelTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 10px;color:var(--text-muted);';
