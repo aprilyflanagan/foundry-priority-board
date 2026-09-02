@@ -6,6 +6,26 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
 const ROSTER_FILE = path.join(__dirname, 'roster.json');
+const PERSIST_DIR = process.env.PERSIST_DIR || '';
+const PERSISTED_DATA_FILE = PERSIST_DIR ? path.join(PERSIST_DIR, 'data.json') : DATA_FILE;
+const PERSISTED_ROSTER_FILE = PERSIST_DIR ? path.join(PERSIST_DIR, 'roster.json') : ROSTER_FILE;
+
+// If a persistent disk is mounted (PERSIST_DIR set) but hasn't been seeded yet,
+// copy the repo's starting data/roster onto it once. After that, all reads and
+// writes go to the persistent disk and are never touched by future deploys.
+function ensureSeeded() {
+  if (!PERSIST_DIR) return;
+  try { fs.mkdirSync(PERSIST_DIR, { recursive: true }); } catch (e) {}
+  if (!fs.existsSync(PERSISTED_DATA_FILE) && fs.existsSync(DATA_FILE)) {
+    fs.copyFileSync(DATA_FILE, PERSISTED_DATA_FILE);
+    console.log('Seeded persistent data.json from repo copy (first run on this disk).');
+  }
+  if (!fs.existsSync(PERSISTED_ROSTER_FILE) && fs.existsSync(ROSTER_FILE)) {
+    fs.copyFileSync(ROSTER_FILE, PERSISTED_ROSTER_FILE);
+    console.log('Seeded persistent roster.json from repo copy (first run on this disk).');
+  }
+}
+ensureSeeded();
 const PIN = process.env.BOARD_PIN || '';
 const FULCRUM_TOKEN = process.env.FULCRUM_API_TOKEN || '';
 const FULCRUM_BASE = 'https://api.fulcrumpro.com';
@@ -34,7 +54,7 @@ function checkPin(req, res, next) {
 }
 
 app.get('/api/state', checkPin, (req, res) => {
-  const state = readJsonFile(DATA_FILE);
+  const state = readJsonFile(PERSISTED_DATA_FILE);
   res.json(state || { active: [], shipped: [], seeded: false });
 });
 
@@ -43,12 +63,12 @@ app.post('/api/state', checkPin, (req, res) => {
   if (!body || !Array.isArray(body.active) || !Array.isArray(body.shipped)) {
     return res.status(400).json({ error: 'Malformed state payload' });
   }
-  writeJsonFile(DATA_FILE, body);
+  writeJsonFile(PERSISTED_DATA_FILE, body);
   res.json({ ok: true, savedAt: new Date().toISOString() });
 });
 
 app.get('/api/roster', checkPin, (req, res) => {
-  const roster = readJsonFile(ROSTER_FILE);
+  const roster = readJsonFile(PERSISTED_ROSTER_FILE);
   res.json(roster || { employees: [], startDate: null, numDays: 21, cells: {} });
 });
 
@@ -57,7 +77,7 @@ app.post('/api/roster', checkPin, (req, res) => {
   if (!body || !Array.isArray(body.employees) || typeof body.cells !== 'object') {
     return res.status(400).json({ error: 'Malformed roster payload' });
   }
-  writeJsonFile(ROSTER_FILE, body);
+  writeJsonFile(PERSISTED_ROSTER_FILE, body);
   res.json({ ok: true, savedAt: new Date().toISOString() });
 });
 
@@ -171,7 +191,7 @@ app.get('/api/live-timers', checkPin, async (req, res) => {
   // Filter down to just this app's roster (Foundry people), so the live panel
   // doesn't show everyone clocked in shop-wide (e.g. Fab Shop/welding staff too).
   if (result.data) {
-    const roster = readJsonFile(ROSTER_FILE);
+    const roster = readJsonFile(PERSISTED_ROSTER_FILE);
     const rosterTokens = [];
     if (roster && roster.employees) {
       roster.employees.forEach(e => {
