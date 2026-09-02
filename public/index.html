@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Foundry Priority Board</title>
+<title>Job Priority Board</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
 <div class="board-header">
   <p class="eyebrow">Urban Accessories &middot; Production</p>
   <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-    <h1 class="board-title">Foundry Priority Board</h1>
+    <h1 class="board-title">Job Priority Board</h1>
     <a href="/schedule.html" style="font-family:var(--font-mono);font-size:12px;color:var(--steel);text-decoration:none;border:1px solid var(--border-strong);border-radius:6px;padding:6px 10px;">3-Week Schedule &rarr;</a>
   </div>
   <div class="ruler"></div>
@@ -217,11 +217,34 @@ function processTotal(job) {
   const sum = PROCESSES.reduce((a, p) => a + (job.processHours[p.key] || 0), 0);
   return sum > 0 ? sum : job.hours;
 }
-function materialsDotColor(s) { return s === 'received' ? 'var(--text-success)' : s === 'ordered' ? 'var(--text-warning)' : 'var(--text-danger)'; }
-function materialsLabel(s) { return s === 'received' ? 'Received' : s === 'ordered' ? 'Ordered' : 'Missing'; }
-function nextMaterialsStatus(s) { return s === 'missing' ? 'ordered' : s === 'ordered' ? 'received' : 'missing'; }
-function drawingsDotColor(s) { return s === 'complete' ? 'var(--text-success)' : 'var(--text-danger)'; }
-function drawingsLabel(s) { return s === 'complete' ? 'Complete' : 'Missing'; }
+function materialsDotColor(s) {
+  if (s === 'received') return 'var(--text-success)';
+  if (s === 'ordered') return 'var(--text-warning)';
+  if (s === 'pc') return '#5b7fa6';
+  if (s === 'tbd') return 'var(--text-muted)';
+  return 'var(--text-danger)';
+}
+function materialsLabel(s) {
+  if (s === 'received') return 'Received';
+  if (s === 'ordered') return 'Ordered';
+  if (s === 'pc') return 'PC';
+  if (s === 'tbd') return 'TBD';
+  return 'Missing';
+}
+function drawingsDotColor(s) {
+  if (s === 'complete') return 'var(--text-success)';
+  if (s === 'pc') return '#5b7fa6';
+  if (s === 'tbd') return 'var(--text-muted)';
+  return 'var(--text-danger)';
+}
+function drawingsLabel(s) {
+  if (s === 'complete') return 'Complete';
+  if (s === 'pc') return 'PC';
+  if (s === 'tbd') return 'TBD';
+  return 'Missing';
+}
+const MATERIALS_OPTIONS = [['missing','Missing'],['ordered','Ordered'],['pc','PC'],['received','Received'],['tbd','TBD']];
+const DRAWINGS_OPTIONS = [['missing','Missing'],['pc','PC'],['complete','Complete'],['tbd','TBD']];
 
 function renderActive() {
   const container = document.getElementById('activeList');
@@ -240,11 +263,38 @@ function renderActive() {
 
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 0 rgba(33,31,27,0.03);' + (job.status === 'blocked' ? 'border-left:3px solid var(--amber);' : '');
+    wrap.draggable = true;
+    wrap.dataset.idx = idx;
+    wrap.addEventListener('dragstart', (e) => {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(idx));
+      wrap.style.opacity = '0.4';
+    });
+    wrap.addEventListener('dragend', () => { wrap.style.opacity = '1'; });
+    wrap.addEventListener('dragover', (e) => { e.preventDefault(); row.style.borderTop = '2px solid var(--rust)'; });
+    wrap.addEventListener('dragleave', () => { row.style.borderTop = ''; });
+    wrap.addEventListener('drop', (e) => {
+      e.preventDefault();
+      row.style.borderTop = '';
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      const toIdx = idx;
+      if (fromIdx === toIdx) return;
+      const [moved] = state.active.splice(fromIdx, 1);
+      state.active.splice(toIdx, 0, moved);
+      renderActive();
+      pushState();
+    });
 
     const rankBadge = document.createElement('div');
     rankBadge.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--paper);background:var(--ink-800);min-width:26px;height:22px;line-height:22px;text-align:center;border-radius:4px;flex-shrink:0;';
     rankBadge.textContent = String(idx + 1).padStart(2, '0');
     row.appendChild(rankBadge);
+
+    const dragHandle = document.createElement('div');
+    dragHandle.innerHTML = '&#8942;&#8942;';
+    dragHandle.title = 'Drag to reorder';
+    dragHandle.style.cssText = 'cursor:grab;color:var(--text-muted);font-size:14px;line-height:1;letter-spacing:-2px;padding:0 2px;flex-shrink:0;user-select:none;';
+    row.appendChild(dragHandle);
 
     const upBtn = document.createElement('button');
     upBtn.innerHTML = '&#9650;';
@@ -273,13 +323,43 @@ function renderActive() {
     const caret = document.createElement('span');
     caret.style.cssText = 'color:var(--text-muted);font-size:11px;margin-right:4px;';
     caret.textContent = expandedId === job.id ? '\u25be' : '\u25b8';
+    title.appendChild(caret);
+
     const soSpan = document.createElement('span');
-    soSpan.style.cssText = 'font-family:var(--font-mono);font-weight:600;color:var(--rust);letter-spacing:0.01em;';
+    soSpan.style.cssText = 'font-family:var(--font-mono);font-weight:600;color:var(--rust);letter-spacing:0.01em;cursor:text;text-decoration:underline dotted;';
     soSpan.textContent = 'SO ' + job.so;
+    soSpan.title = 'Click to edit SO number';
+    soSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const input = document.createElement('input');
+      input.type = 'text'; input.value = job.so; input.style.cssText = 'font-size:13px;padding:2px 4px;width:90px;font-family:var(--font-mono);';
+      input.addEventListener('click', ev => ev.stopPropagation());
+      input.addEventListener('change', () => { job.so = input.value.trim(); renderActive(); pushState(); });
+      input.addEventListener('blur', () => renderActive());
+      title.replaceChild(input, soSpan);
+      input.focus(); input.select();
+    });
+    title.appendChild(soSpan);
+
+    const dashSpan = document.createElement('span');
+    dashSpan.textContent = '  \u2014  ';
+    title.appendChild(dashSpan);
+
     const custSpan = document.createElement('span');
-    custSpan.style.cssText = 'font-weight:500;color:var(--text-primary);';
-    custSpan.textContent = '  \u2014  ' + job.customer;
-    title.appendChild(caret); title.appendChild(soSpan); title.appendChild(custSpan);
+    custSpan.style.cssText = 'font-weight:500;color:var(--text-primary);cursor:text;text-decoration:underline dotted;';
+    custSpan.textContent = job.customer;
+    custSpan.title = 'Click to edit customer name';
+    custSpan.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const input = document.createElement('input');
+      input.type = 'text'; input.value = job.customer; input.style.cssText = 'font-size:13px;padding:2px 4px;width:160px;';
+      input.addEventListener('click', ev => ev.stopPropagation());
+      input.addEventListener('change', () => { job.customer = input.value.trim(); renderActive(); pushState(); });
+      input.addEventListener('blur', () => renderActive());
+      title.replaceChild(input, custSpan);
+      input.focus(); input.select();
+    });
+    title.appendChild(custSpan);
     info.appendChild(title);
 
     const sub = document.createElement('div');
@@ -345,23 +425,54 @@ function renderActive() {
       const notesEl = document.createElement('p');
       notesEl.style.cssText = 'font-size:11px;margin:2px 0 0;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
       notesEl.textContent = job.notes;
+      notesEl.title = 'Click to read full note';
       info.appendChild(notesEl);
     }
     row.appendChild(info);
 
-    const matBtn = document.createElement('button');
-    matBtn.style.cssText = 'font-size:11px;padding:6px 8px;display:flex;align-items:center;gap:4px;';
-    matBtn.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:' + materialsDotColor(job.materialsStatus) + ';display:inline-block;"></span>Mat: ' + materialsLabel(job.materialsStatus);
-    matBtn.title = 'Click to cycle: Missing \u2192 Ordered \u2192 Received';
-    matBtn.addEventListener('click', () => { job.materialsStatus = nextMaterialsStatus(job.materialsStatus); renderActive(); pushState(); });
-    row.appendChild(matBtn);
+    const matWrap = document.createElement('div');
+    matWrap.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:11px;padding:4px 6px;border:1px solid var(--border-strong);border-radius:6px;';
+    const matDot = document.createElement('span');
+    matDot.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + materialsDotColor(job.materialsStatus) + ';display:inline-block;flex-shrink:0;';
+    matWrap.appendChild(matDot);
+    const matLabel = document.createElement('span');
+    matLabel.textContent = 'Mat:';
+    matLabel.style.cssText = 'color:var(--text-muted);';
+    matWrap.appendChild(matLabel);
+    const matSelect = document.createElement('select');
+    matSelect.style.cssText = 'font-size:11px;border:none;background:transparent;color:var(--text-primary);padding:0;';
+    MATERIALS_OPTIONS.forEach(([val, label]) => {
+      const opt = document.createElement('option');
+      opt.value = val; opt.textContent = label;
+      if (job.materialsStatus === val) opt.selected = true;
+      matSelect.appendChild(opt);
+    });
+    matSelect.addEventListener('click', e => e.stopPropagation());
+    matSelect.addEventListener('change', () => { job.materialsStatus = matSelect.value; renderActive(); pushState(); });
+    matWrap.appendChild(matSelect);
+    row.appendChild(matWrap);
 
-    const drawBtn = document.createElement('button');
-    drawBtn.style.cssText = 'font-size:11px;padding:6px 8px;display:flex;align-items:center;gap:4px;';
-    drawBtn.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:' + drawingsDotColor(job.drawingsStatus) + ';display:inline-block;"></span>Dwg: ' + drawingsLabel(job.drawingsStatus);
-    drawBtn.title = 'Click to toggle Missing / Complete';
-    drawBtn.addEventListener('click', () => { job.drawingsStatus = job.drawingsStatus === 'complete' ? 'missing' : 'complete'; renderActive(); pushState(); });
-    row.appendChild(drawBtn);
+    const drawWrap = document.createElement('div');
+    drawWrap.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:11px;padding:4px 6px;border:1px solid var(--border-strong);border-radius:6px;';
+    const drawDot = document.createElement('span');
+    drawDot.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + drawingsDotColor(job.drawingsStatus) + ';display:inline-block;flex-shrink:0;';
+    drawWrap.appendChild(drawDot);
+    const drawLabel = document.createElement('span');
+    drawLabel.textContent = 'Dwg:';
+    drawLabel.style.cssText = 'color:var(--text-muted);';
+    drawWrap.appendChild(drawLabel);
+    const drawSelect = document.createElement('select');
+    drawSelect.style.cssText = 'font-size:11px;border:none;background:transparent;color:var(--text-primary);padding:0;';
+    DRAWINGS_OPTIONS.forEach(([val, label]) => {
+      const opt = document.createElement('option');
+      opt.value = val; opt.textContent = label;
+      if (job.drawingsStatus === val) opt.selected = true;
+      drawSelect.appendChild(opt);
+    });
+    drawSelect.addEventListener('click', e => e.stopPropagation());
+    drawSelect.addEventListener('change', () => { job.drawingsStatus = drawSelect.value; renderActive(); pushState(); });
+    drawWrap.appendChild(drawSelect);
+    row.appendChild(drawWrap);
 
     const blockBtn = document.createElement('button');
     blockBtn.style.cssText = 'font-size:12px;padding:6px 10px;';
@@ -380,6 +491,18 @@ function renderActive() {
     if (expandedId === job.id) {
       const panel = document.createElement('div');
       panel.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:4px;';
+
+      if (job.notes) {
+        const notesTitle = document.createElement('p');
+        notesTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 6px;color:var(--text-muted);';
+        notesTitle.textContent = 'Notes';
+        panel.appendChild(notesTitle);
+        const notesFull = document.createElement('p');
+        notesFull.style.cssText = 'font-size:13px;line-height:1.5;margin:0 0 14px;color:var(--text-primary);white-space:pre-wrap;';
+        notesFull.textContent = job.notes;
+        panel.appendChild(notesFull);
+      }
+
       const panelTitle = document.createElement('p');
       panelTitle.style.cssText = 'font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin:0 0 10px;color:var(--text-muted);';
       panelTitle.textContent = 'Hours needed per process';
