@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-Week Schedule</title>
+<title>3-Week Foundry Schedule</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -89,9 +89,9 @@
   <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;">
     <div>
       <p class="eyebrow">Urban Accessories &middot; Production</p>
-      <h1>3-Week Welder Schedule</h1>
+      <h1>3-Week Foundry Schedule</h1>
     </div>
-    <a class="backlink" href="/index.html">&larr; Job Priority Board</a>
+    <a class="backlink" href="/index.html">&larr; Foundry Priority Board</a>
   </div>
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px;flex-wrap:wrap;">
@@ -131,9 +131,10 @@ let pin = sessionStorage.getItem('board-pin') || '';
 let saveTimer = null;
 
 const COLOR_PALETTE = [
-  '#cfe3f7','#d7ead2','#f7d9c4','#e6d5f2','#fbe3ee','#fff2b8','#d3e0e0','#e8d6c3','#c9e8dd','#f0d0d0',
-  '#c7d9f0','#e0d9c0','#d0e8e0','#f0e0d0','#dcd0e8','#e8d0dc','#d0e0d8','#f0d8c0','#d8e0f0','#e8e0d0',
-  '#c8e0d0','#f0d0e8','#d0d8f0','#e0f0d0'
+  '#eab7b7','#ead1b7','#eaeab7','#d1eab7','#b7eab7','#b7ead1','#b7eaea','#b7d1ea','#b7b7ea','#d1b7ea',
+  '#eab7ea','#eab7d1','#da9e9e','#dabc9e','#dada9e','#bcda9e','#9eda9e','#9edabc','#9edada','#9ebcda',
+  '#9e9eda','#bc9eda','#da9eda','#da9ebc','#f4cccc','#f4e0cc','#f4f4cc','#e0f4cc','#ccf4cc','#ccf4e0',
+  '#ccf4f4','#cce0f4','#ccccf4','#e0ccf4','#f4ccf4','#f4cce0'
 ];
 function colorKey(v) {
   // use only the leading job/customer token so "301863 Economy" and "301863" (or slight
