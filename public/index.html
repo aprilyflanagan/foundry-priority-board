@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Priority Board</title>
+<title>Foundry Priority Board</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
 <div class="board-header">
   <p class="eyebrow">Urban Accessories &middot; Production</p>
   <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-    <h1 class="board-title">Job Priority Board</h1>
+    <h1 class="board-title">Foundry Priority Board</h1>
     <a href="/schedule.html" style="font-family:var(--font-mono);font-size:12px;color:var(--steel);text-decoration:none;border:1px solid var(--border-strong);border-radius:6px;padding:6px 10px;">3-Week Schedule &rarr;</a>
   </div>
   <div class="ruler"></div>
@@ -101,7 +101,10 @@
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem;flex-wrap:wrap;gap:8px;">
   <p style="font-size:12px;color:var(--text-muted);margin:0;font-family:var(--font-mono);" id="lastSaved"></p>
-  <button id="addJobBtn" style="font-size:13px;">+ Add job</button>
+  <div style="display:flex;gap:8px;">
+    <button id="importMasterBtn" style="font-size:13px;">Import Master list (40)</button>
+    <button id="addJobBtn" style="font-size:13px;">+ Add job</button>
+  </div>
 </div>
 
 <div id="addJobPanel" style="display:none;background:var(--card);border:1px solid var(--border-strong);border-radius:8px;padding:14px;margin-bottom:1rem;">
@@ -138,6 +141,9 @@
 </div>
 
 <script>
+const MASTER_TOP40 = [{"so":"301551","customer":"BRIGHTVIEW","hours":3104,"due":null,"notes":"NEW SO - E-L filled from routing (3104 h) | RELEASED | 28 jobs: 21 In Progress, ","status":"active"},{"so":"301861","customer":"Architerra","hours":207.4,"due":null,"notes":"NEW SO - E-L filled from routing (207.5 h) | RELEASED | 19 jobs: 13 In Progress,","status":"active"},{"so":"301867","customer":"Architerra","hours":122.5,"due":null,"notes":"NEW SO - E-L filled from routing (122.5 h) | RELEASED | 4 jobs: 2 In Progress, 2","status":"active"},{"so":"301964","customer":"Pacific Landscape Management, Inc.","hours":27.5,"due":null,"notes":"NEW SO - E-L filled from routing (27.5 h) | RELEASED | 3 jobs: 3 In Progress | [","status":"active"},{"so":"301965","customer":"Pacific Landscape Management, Inc.","hours":24.3,"due":null,"notes":"NEW SO - E-L filled from routing (24.2 h) | RELEASED + SCHEDULED | 2 jobs: 1 Hol","status":"active"},{"so":"302025","customer":"Baker Design Build","hours":71,"due":null,"notes":"NEW SO - E-L filled from routing (71 h) | RELEASED | 1 jobs: 1 In Progress | [F ","status":"active"},{"so":"302158","customer":"Pacific Landscape Management, Inc.","hours":60.4,"due":null,"notes":"NEW SO - E-L filled from routing (60.3 h) | RELEASED | 2 jobs: 2 In Progress | [","status":"active"},{"so":"301839","customer":"Clearway Utilities Inc.","hours":6.8,"due":"2026-09-04","notes":"HOURS DIFFER: sheet 6.8 vs Fulcrum 13.5 (-6.7) [PC +2, FAB -6, CUT -3, PACKSHIP ","status":"active"},{"so":"301863","customer":"Architerra","hours":21.5,"due":"2026-08-07","notes":"HOURS MATCH (21.5 h) | RELEASED + SCHEDULED | 3 jobs: 3 Scheduled | [F 2026-08-2","status":"active"},{"so":"302021","customer":"PLAYSPACE DESIGNS","hours":112.3,"due":"2026-08-12","notes":"HOURS DIFFER: sheet 112.3 vs Fulcrum 92.8 (+19.5) [FAB +19.5] | RELEASED | 4 job","status":"active"},{"so":"302123","customer":"PLAYSPACE DESIGNS","hours":31.5,"due":"2026-08-13","notes":"HOURS MATCH (31.5 h) | RELEASED | 2 jobs: 2 In Progress | [F 2026-08-26]","status":"active"},{"so":"301985","customer":"BRIGHTVIEW","hours":242.7,"due":"2026-09-10","notes":"HOURS DIFFER: sheet 242.7 vs Fulcrum 236.9 (+5.8) [CUT -1.5, FOUNDRY +7.3] | REL","status":"active"},{"so":"301645","customer":"SPRUCE & GANDER","hours":60,"due":"2026-08-10","notes":"HOURS DIFFER: sheet 60 vs Fulcrum 0 (+60) [GRIND +60] | RELEASED | 12 jobs: 6 Ca","status":"active"},{"so":"302024","customer":"Alto Construction","hours":1.8,"due":"2026-07-16","notes":"HOURS DIFFER: sheet 1.8 vs Fulcrum 2.5 (-0.7) [PC -0.4, PACKSHIP -0.3] | RELEASE","status":"active"},{"so":"302241","customer":"Gibson Landscape","hours":4.9,"due":"2026-08-05","notes":"HOURS DIFFER: sheet 4.9 vs Fulcrum 0.5 (+4.4) [FAB +3, CUT +0.9, PACKSHIP +0.5] ","status":"active"},{"so":"301822","customer":"WASHINGTON STATE FAIR","hours":3,"due":"2026-06-17","notes":"HOURS DIFFER: sheet 3 vs Fulcrum 7 (-4) [FAB -4] | RELEASED | 1 jobs: 1 In Progr","status":"active"},{"so":"302034","customer":"W.M. Welch Corp","hours":8.2,"due":"2026-10-09","notes":"HOURS DIFFER: sheet 8.2 vs Fulcrum 15 (-6.8) [PC -1, FAB -8, CUT +4, PACKSHIP -1","status":"active"},{"so":"301926","customer":"WASHINGTON STATE FAIR","hours":7.5,"due":"2026-07-16","notes":"HOURS MATCH (7.5 h) | RELEASED | 1 jobs: 1 In Progress | [F 2026-08-26]","status":"active"},{"so":"301753","customer":"Architerra","hours":7,"due":"2026-04-08","notes":"HOURS MATCH (7 h) | RELEASED | 1 jobs: 1 In Progress | [F 2026-08-26]","status":"active"},{"so":"301909","customer":"WASHINGTON STATE FAIR","hours":7.5,"due":"2026-07-16","notes":"HOURS MATCH (7.5 h) | RELEASED | 1 jobs: 1 In Progress | 0.5 h cancelled exclude","status":"active"},{"so":"301845","customer":"Everlast Blacktop","hours":120,"due":"2026-06-29","notes":"HOURS MATCH (120 h) | NOT RELEASED (Hold) | 1 jobs: 1 Hold | [F 2026-08-26]","status":"active"},{"so":"302065","customer":"WASHINGTON STATE FAIR","hours":7.5,"due":"2026-08-05","notes":"HOURS MATCH (7.5 h) | RELEASED | 1 jobs: 1 In Progress | [F 2026-08-26]","status":"active"},{"so":"301950","customer":"Adams Construction","hours":12,"due":"2026-08-06","notes":"HOURS DIFFER: sheet 12 vs Fulcrum 11 (+1) [PC +2, PACKSHIP -1] | RELEASED | 1 jo","status":"active"},{"so":"301995","customer":"WASHINGTON STATE FAIR","hours":7.5,"due":"2026-09-02","notes":"HOURS MATCH (7.5 h) | RELEASED | 1 jobs: 1 In Progress | [F 2026-08-26]","status":"active"},{"so":"302104","customer":"BRIGHTVIEW","hours":24.5,"due":"2026-09-08","notes":"HOURS MATCH (24.5 h) | RELEASED | 2 jobs: 1 Complete, 1 In Progress | PARTIAL SH","status":"active"},{"so":"301923","customer":"Constructors, Inc.","hours":471.7,"due":"2026-08-26","notes":"HOURS DIFFER: sheet 150 vs Fulcrum 60.6 (+89.4) [FOUNDRY +79.5, GRIND +10.8, PAT","status":"active"},{"so":"301777","customer":"Architerra","hours":169.5,"due":"2026-04-22","notes":"HOURS MATCH (169.5 h) | RELEASED + SCHEDULED | 1 jobs: 1 Scheduled | [F 2026-08-","status":"active"},{"so":"302278","customer":"SPRUCE & GANDER","hours":142,"due":"2026-09-28","notes":"NOT ROUTED - E-L left blank | NOT RELEASED (Engineering) | 5 jobs: 5 Engineering","status":"active"},{"so":"302037","customer":"City Of Apple Valley","hours":20,"due":"2026-06-08","notes":"HOURS DIFFER: sheet 20 vs Fulcrum 0 (+20) [FOUNDRY +10, GRIND +10] | RELEASED | ","status":"active"},{"so":"302015","customer":"TCF Architecture","hours":4,"due":"2026-07-28","notes":"HOURS MATCH (4 h) | RELEASED + SCHEDULED | 2 jobs: 2 Scheduled | [F 2026-08-26]","status":"active"},{"so":"302284","customer":"DME BUILDS","hours":347.2,"due":"2026-10-20","notes":"HOURS MATCH (347.2 h) | RELEASED + SCHEDULED | 8 jobs: 7 Approved, 1 Scheduled |","status":"active"},{"so":"302194","customer":"Manafort Brothers","hours":263.4,"due":"2026-10-13","notes":"HOURS MATCH (263.3 h) | RELEASED + SCHEDULED | 2 jobs: 1 Scheduled, 1 Needs Revi","status":"active"},{"so":"301453","customer":"ANN ARBOR DDA","hours":4,"due":"2026-01-15","notes":"HOURS DIFFER: sheet 4 vs Fulcrum 7.5 (-3.5) [PC -4, FAB -2, PACKSHIP +2.5] | REL","status":"active"},{"so":"302270","customer":"Creature","hours":47.5,"due":"2026-11-25","notes":"HOURS MATCH (47.5 h) | RELEASED + SCHEDULED | 2 jobs: 1 Approved, 1 Scheduled | ","status":"active"},{"so":"301997","customer":"JW Marriott Savannah Plant Riverside District","hours":3.8,"due":"2026-07-23","notes":"HOURS MATCH (3.8 h) | RELEASED | 1 jobs: 1 In Progress | 3.83 h cancelled exclud","status":"active"},{"so":"302185","customer":"SPRUCE & GANDER","hours":87.5,"due":"2026-09-28","notes":"HOURS DIFFER: sheet 87.5 vs Fulcrum 85.7 (+1.8) [CUT +1.9] | RELEASED | 4 jobs: ","status":"active"},{"so":"300717","customer":"Owen-Ames-Kimball","hours":164.6,"due":"2026-07-24","notes":"HOURS MATCH (164.6 h) | RELEASED + SCHEDULED | 1 jobs: 1 Scheduled | [F 2026-08-","status":"active"},{"so":"301603","customer":"The Whiting-Turner Contracting Company","hours":6.3,"due":"2026-03-24","notes":"HOURS DIFFER: sheet 6.3 vs Fulcrum 7 (-0.7) [PC -0.7] | RELEASED | 1 jobs: 1 In ","status":"active"},{"so":"302153","customer":"Mid-Atlantic Products, Inc.","hours":1.7,"due":"2026-08-18","notes":"HOURS MATCH (1.7 h) | RELEASED | 1 jobs: 1 In Progress | 1 h cancelled excluded ","status":"active"},{"so":"302089","customer":"Bainbridge Youth Svc","hours":12.5,"due":"2026-08-11","notes":"HOURS MATCH (12.5 h) | RELEASED + SCHEDULED | 1 jobs: 1 Scheduled | [F 2026-08-2","status":"active"}]
+;
+
 const PROCESSES = [
   { key: 'cutShop', label: 'Cut Shop', color: '#2a78d6' },
   { key: 'foundry', label: 'Foundry', color: '#1baf7a' },
@@ -519,6 +525,20 @@ function renderActive() {
     shipBtn.addEventListener('click', () => shipJob(idx));
     row.appendChild(shipBtn);
 
+    const deleteBtn = document.createElement('button');
+    deleteBtn.style.cssText = 'font-size:12px;padding:6px 10px;color:var(--text-danger);';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.title = 'Permanently remove this job from the list (not the same as Ship)';
+    deleteBtn.addEventListener('click', () => {
+      if (confirm('Permanently delete SO ' + job.so + ' (' + job.customer + ') from this board? This cannot be undone.')) {
+        state.active.splice(idx, 1);
+        if (expandedId === job.id) expandedId = null;
+        renderActive();
+        pushState();
+      }
+    });
+    row.appendChild(deleteBtn);
+
     wrap.appendChild(row);
 
     if (expandedId === job.id) {
@@ -618,6 +638,20 @@ function restoreJob(id) {
   job.status = 'active'; delete job.shippedDate;
   state.active.push(job); renderActive(); renderShipped(); pushState();
 }
+
+document.getElementById('importMasterBtn').addEventListener('click', () => {
+  const existing = new Set(state.active.map(j => j.so));
+  let added = 0, skipped = 0;
+  MASTER_TOP40.forEach(j => {
+    if (existing.has(j.so)) { skipped++; return; }
+    state.active.push(ensureJobShape({ id: genId(j.so), so: j.so, customer: j.customer, hours: j.hours, due: j.due, notes: j.notes, status: 'active' }));
+    existing.add(j.so);
+    added++;
+  });
+  renderActive();
+  pushState();
+  alert('Imported ' + added + ' new job(s) from the Master schedule top 40. Skipped ' + skipped + ' already on your board.');
+});
 
 document.getElementById('addJobBtn').addEventListener('click', () => { document.getElementById('addJobPanel').style.display = 'block'; });
 document.getElementById('cancelAddBtn').addEventListener('click', () => { document.getElementById('addJobPanel').style.display = 'none'; document.getElementById('addError').style.display = 'none'; });
