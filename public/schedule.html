@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-Week Foundry Schedule</title>
+<title>3-Week Schedule</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -89,9 +89,9 @@
   <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;">
     <div>
       <p class="eyebrow">Urban Accessories &middot; Production</p>
-      <h1>3-Week Foundry Schedule</h1>
+      <h1>3-Week Welder Schedule</h1>
     </div>
-    <a class="backlink" href="/index.html">&larr; Foundry Priority Board</a>
+    <a class="backlink" href="/index.html">&larr; Job Priority Board</a>
   </div>
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px;flex-wrap:wrap;">
@@ -99,6 +99,7 @@
     <div style="display:flex;gap:8px;">
       <button id="syncBtn">Check Fulcrum &amp; update &#8599;</button>
       <button id="addEmployeeBtn">+ Add row</button>
+      <button id="shiftBackBtn">&larr; Shift 1 week back</button>
       <button id="shiftWeekBtn">Shift 1 week forward &rarr;</button>
     </div>
   </div>
@@ -314,6 +315,21 @@ document.getElementById('shiftWeekBtn').addEventListener('click', () => {
     const [empIdx, dayIdx] = key.split('-').map(Number);
     const shifted = dayIdx - 7;
     if (shifted >= 0) newCells[empIdx + '-' + shifted] = state.cells[key];
+  });
+  state.cells = newCells;
+  state.startDate = newStart.toISOString().slice(0, 10);
+  renderTable();
+  pushRoster();
+});
+
+document.getElementById('shiftBackBtn').addEventListener('click', () => {
+  const start = new Date(state.startDate + 'T00:00:00');
+  const newStart = new Date(start.getTime() - 7 * 86400000);
+  const newCells = {};
+  Object.keys(state.cells).forEach(key => {
+    const [empIdx, dayIdx] = key.split('-').map(Number);
+    const shifted = dayIdx + 7;
+    if (shifted < state.numDays) newCells[empIdx + '-' + shifted] = state.cells[key];
   });
   state.cells = newCells;
   state.startDate = newStart.toISOString().slice(0, 10);
