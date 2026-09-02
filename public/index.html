@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Foundry Priority Board</title>
+<title>Job Priority Board</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
 <div class="board-header">
   <p class="eyebrow">Urban Accessories &middot; Production</p>
   <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-    <h1 class="board-title">Foundry Priority Board</h1>
+    <h1 class="board-title">Job Priority Board</h1>
     <a href="/schedule.html" style="font-family:var(--font-mono);font-size:12px;color:var(--steel);text-decoration:none;border:1px solid var(--border-strong);border-radius:6px;padding:6px 10px;">3-Week Schedule &rarr;</a>
   </div>
   <div class="ruler"></div>
@@ -273,7 +273,7 @@ function renderActive() {
     wrap.style.cssText = 'margin-bottom:6px;';
 
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 0 rgba(33,31,27,0.03);' + (job.status === 'blocked' ? 'border-left:3px solid var(--amber);' : '');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 0 rgba(33,31,27,0.03);flex-wrap:wrap;' + (job.status === 'blocked' ? 'border-left:3px solid var(--amber);' : '');
     wrap.draggable = true;
     wrap.dataset.idx = idx;
     wrap.addEventListener('dragstart', (e) => {
@@ -327,7 +327,7 @@ function renderActive() {
     row.appendChild(arrows);
 
     const info = document.createElement('div');
-    info.style.cssText = 'flex:1;min-width:0;cursor:pointer;';
+    info.style.cssText = 'flex:1 1 260px;min-width:220px;cursor:pointer;';
     info.addEventListener('click', () => { expandedId = expandedId === job.id ? null : job.id; renderActive(); });
     const title = document.createElement('p');
     title.style.cssText = 'font-size:14px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
@@ -374,7 +374,7 @@ function renderActive() {
     info.appendChild(title);
 
     const sub = document.createElement('div');
-    sub.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:2px;';
+    sub.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:2px;flex-wrap:wrap;';
 
     const dueSpan = document.createElement('span');
     dueSpan.style.cssText = 'font-family:var(--font-mono);font-size:11px;color:' + dueColor(job.due) + ';cursor:pointer;text-decoration:underline dotted;';
